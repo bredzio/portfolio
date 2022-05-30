@@ -6,6 +6,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	</head>
 	<body class="is-preload">
 
@@ -175,24 +176,24 @@
 					</header>
 					<div class="row">
 						<div class="col-12">
-							<form method="post" action="#">
+							<form id="form">
 								<div class="row">
 									<div class="col-6 col-12-small">
-										<input type="text" name="nombre" id="nombre" placeholder="Nombre" />
+										<input type="text" name="name" id="name" placeholder="Nombre" required/>
 									</div>
 									<div class="col-6 col-12-small">
-										<input type="text" name="email" id="email" placeholder="Correo Electrónico" />
+										<input type="email" name="email" id="email" placeholder="Correo Electrónico" required/>
 									</div>
 									<div class="col-12">
-										<input type="text" name="subject" id="subject" placeholder="Asunto" />
+										<input type="text" name="subject" id="subject" placeholder="Asunto" required/>
 									</div>
 									<div class="col-12">
-										<textarea name="message" id="message" placeholder="Mensaje"></textarea>
+										<textarea name="message" id="message" placeholder="Mensaje" required></textarea>
 									</div>
 									<div class="col-12">
 										<ul class="actions">
-											<li><input type="submit" value="Enviar Mensaje" /></li>
-											<li><input type="reset" value="Limpiar Formulario" class="alt" /></li>
+											<li><input type="submit" value="Enviar Mensaje" id="button"/></li>
+											<li><input type="reset" value="Limpiar Formulario" class="alt"/></li>
 										</ul>
 									</div>
 								</div>
@@ -225,6 +226,42 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 			<script src="https://kit.fontawesome.com/38339c558e.js" crossorigin="anonymous"></script>
+			<script type="text/javascript"
+			src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+			<script type="text/javascript">
+			emailjs.init('WF767NJ721MN6gPOH')
+			</script>
+			<script>
+				const btn = document.getElementById('button');
+				document.getElementById('form')
+				.addEventListener('submit', function(event){
+					event.preventDefault();
+					btn.value = "Enviando...";
+
+					const serviceId='default_service';
+					const templateId='template_9he4mhl';
+
+					emailjs.sendForm(serviceId, templateId, this)
+					.then(()=>{
+						btn.value = 'Enviar Mensaje';
+						toastr.success('¡Mensaje Enviado!', {
+						positionClass: 'toast-top-center',
+						progressBar: true,
+						closeButton: true,
+						timeOut: 3000,  
+						});
+					},(err)=>{
+						btn.value = 'Enviar Mensaje';
+						toastr.error(JSON.stringify(err), 'ERROR', {
+						"positionClass": "toast-top-center",
+						"progressBar": true,
+						"closeButton": true,
+						timeOut: 3000,  
+						});
+					});
+				});
+			</script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 	</body>
 </html>
